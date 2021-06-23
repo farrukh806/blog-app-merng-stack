@@ -36,7 +36,7 @@ const usersResolvers = {
 					},
 				});
 			} else {
-				//Hash the password
+				// Hash the password
 				password = await bcrypt.hash(password, 12);
 				const user = new User({
 					email,

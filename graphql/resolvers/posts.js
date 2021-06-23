@@ -1,6 +1,7 @@
 import User from '../../models/User.js';
 import Post from '../../models/Post.js';
 import checkAuth from '../../utils/auth.js';
+import { AuthenticationError } from 'apollo-server';
 
 const postsResolvers = {
 	Query: {
@@ -34,6 +35,25 @@ const postsResolvers = {
 			});
 			const createdPost = await newPost.save();
 			return createdPost;
+		},
+
+		deletePost: async (_, { postId }, context) => {
+			const user = checkAuth(context);
+			try {
+				const post = await Post.findById(postId);
+				if (post) {
+					if (post.user.equals(user.id)) {
+						const deletedPost = await Post.findByIdAndDelete(postId);
+						return 'Post deleted successfully';
+					} else {
+						throw new AuthenticationError(`Unauthorized`);
+					}
+				} else {
+					throw new Error(`Post not found`);
+				}
+			} catch (error) {
+				throw new Error(error);
+			}
 		},
 	},
 };
