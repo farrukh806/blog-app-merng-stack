@@ -1,26 +1,27 @@
 import mongoose from 'mongoose';
+const commentSchema = mongoose.Schema(
+	{
+		body: String,
+		username: String,
+	},
+	{ timestamps: true }
+);
+
+const likeSchema = mongoose.Schema(
+	{
+		username: String,
+	},
+	{
+		timestamps: true,
+	}
+);
 
 const postSchema = mongoose.Schema(
 	{
 		body: String,
 		username: String,
-		comments: [
-			{
-				body: String,
-				username: String,
-			},
-			{
-				timestamps: true,
-			},
-		],
-		likes: [
-			{
-				username: String,
-			},
-			{
-				timestamps: true,
-			},
-		],
+		comments: [commentSchema],
+		likes: [likeSchema],
 		user: {
 			type: mongoose.Schema.Types.ObjectId,
 			ref: 'Users',
