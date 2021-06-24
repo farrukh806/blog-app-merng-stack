@@ -5,7 +5,11 @@ import connectDB from './config/db.js';
 import typeDefs from './graphql/typeDefs.js';
 import resolvers from './graphql/resolvers/index.js';
 
-const server = new ApolloServer({ typeDefs, resolvers, context: ({req}) => ({req}) });
+const server = new ApolloServer({
+	typeDefs,
+	resolvers,
+	context: ({ req }) => ({ req }),
+});
 connectDB();
 server
 	.listen({ port: 5000 })
