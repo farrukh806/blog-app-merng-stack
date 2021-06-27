@@ -1,8 +1,11 @@
 import React from 'react';
 import moment from 'moment';
-import { Button, Card, Image } from 'semantic-ui-react';
+import { Button, Card, Image, Icon, Label } from 'semantic-ui-react';
 
 const PostCard = ({ post: { body, createdAt, username, likes, comments } }) => {
+	const likePostHandler = () => {};
+
+	const commentPostHandler = () => {};
 	return (
 		<Card fluid>
 			<Card.Content>
@@ -12,18 +15,29 @@ const PostCard = ({ post: { body, createdAt, username, likes, comments } }) => {
 					src='https://react.semantic-ui.com/images/avatar/large/daniel.jpg'
 				/>
 				<Card.Header>{username}</Card.Header>
-				<Card.Meta>{createdAt}</Card.Meta>
+				<Card.Meta>
+					{moment(new Date(createdAt.toString()).toDateString()).fromNow()}
+				</Card.Meta>
 				<Card.Description>{body}</Card.Description>
 			</Card.Content>
-			<Card.Content extra>
-				<div className='ui two buttons'>
-					<Button basic color='green'>
-						Approve
+			<Card.Content>
+				<Button as='div' labelPosition='right' onClick={likePostHandler}>
+					<Button color='red' basic>
+						<Icon name='heart' />
 					</Button>
-					<Button basic color='red'>
-						Decline
+					<Label basic color='red' pointing='left'>
+						{likes.length}
+					</Label>
+				</Button>
+
+				<Button as='div' labelPosition='right' onClick={commentPostHandler}>
+					<Button color='purple' basic>
+						<Icon name='comments' />
 					</Button>
-				</div>
+					<Label basic color='purple' pointing='left'>
+						{comments.length}
+					</Label>
+				</Button>
 			</Card.Content>
 		</Card>
 	);
