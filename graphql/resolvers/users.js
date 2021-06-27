@@ -69,7 +69,7 @@ const usersResolvers = {
 					errors,
 				});
 			} else {
-				const match = bcrypt.compare(password, user.password);
+				const match = await bcrypt.compare(password, user.password);
 				if (!match) {
 					errors.general = `Username or password is incorrect`;
 					throw new UserInputError(`Username or password is incorrect`, {
