@@ -67,6 +67,7 @@ const postsResolvers = {
 					const alreadyLiked = await post.likes.findIndex(
 						(like) => like.username === username
 					);
+					console.log(alreadyLiked);
 					if (alreadyLiked > -1) {
 						post.likes.splice(alreadyLiked, 1);
 					} else {
