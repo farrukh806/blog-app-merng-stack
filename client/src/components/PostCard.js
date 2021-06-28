@@ -7,7 +7,7 @@ const PostCard = ({ post: { body, createdAt, username, likes, comments } }) => {
 
 	const commentPostHandler = () => {};
 	return (
-		<Card fluid>
+		<Card fluid style={{ margin: 3 }}>
 			<Card.Content>
 				<Image
 					floated='right'
@@ -16,7 +16,7 @@ const PostCard = ({ post: { body, createdAt, username, likes, comments } }) => {
 				/>
 				<Card.Header>{username}</Card.Header>
 				<Card.Meta>
-					{moment(new Date(createdAt.toString()).toDateString()).fromNow()}
+					{moment(new Date(createdAt).toDateString()).fromNow()}
 				</Card.Meta>
 				<Card.Description>{body}</Card.Description>
 			</Card.Content>
@@ -31,10 +31,10 @@ const PostCard = ({ post: { body, createdAt, username, likes, comments } }) => {
 				</Button>
 
 				<Button as='div' labelPosition='right' onClick={commentPostHandler}>
-					<Button color='purple' basic>
+					<Button color='teal' basic>
 						<Icon name='comments' />
 					</Button>
-					<Label basic color='purple' pointing='left'>
+					<Label basic color='teal' pointing='left'>
 						{comments.length}
 					</Label>
 				</Button>
