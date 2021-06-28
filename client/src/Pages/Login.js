@@ -1,5 +1,12 @@
-import React, { useState, useContext } from 'react';
-import { Form, Button, Message } from 'semantic-ui-react';
+import React, { useState, useContext, useEffect } from 'react';
+import {
+	Form,
+	Button,
+	Message,
+	Grid,
+	Header,
+	Segment,
+} from 'semantic-ui-react';
 import { useMutation, gql } from '@apollo/client';
 
 import { AuthContext } from '../context/auth';
@@ -36,40 +43,58 @@ const Login = ({ history }) => {
 		e.preventDefault();
 		loginUser();
 	};
+	useEffect(() => {
+		if (context.user) {
+			history.push('/');
+		}
+	}, [history, context]);
 	return (
-		<div>
-			<Form
-				onSubmit={submitHandler}
-				noValidate
-				className={loading ? 'loading' : ''}
-				error>
-				<h1>Login</h1>
-				{console.log(errors)}
-				{errors.general && <Message error content={errors.general} />}
-				<Form.Input
-					label='Username'
-					placeholder='Username...'
-					type='text'
-					name='username'
-					value={values.username}
-					onChange={onChangeHandler}
-				/>
-				{errors.username && <Message error content={errors.username} />}
+		<Grid textAlign='center' style={{ height: '100vh' }} verticalAlign='middle'>
+			<Grid.Column style={{ maxWidth: 450 }}>
+				<Header as='h2' color='teal' textAlign='center'>
+					Log-in to your account
+				</Header>
+				<Form
+					size='large'
+					onSubmit={submitHandler}
+					noValidate
+					className={loading ? 'loading' : ''}
+					error>
+					<Segment stacked>
+						{errors.general && <Message error content={errors.general} />}
 
-				<Form.Input
-					label='Password'
-					placeholder='Password...'
-					type='password'
-					name='password'
-					value={values.password}
-					onChange={onChangeHandler}
-				/>
-				{errors.password && <Message error content={errors.password} />}
-				<Button type='submit' primary>
-					Login
-				</Button>
-			</Form>
-		</div>
+						<Form.Input
+							fluid
+							icon='user'
+							iconPosition='left'
+							placeholder='Username...'
+							type='text'
+							name='username'
+							value={values.username}
+							onChange={onChangeHandler}
+						/>
+						{errors.username && <Message error content={errors.username} />}
+
+						<Form.Input
+							fluid
+							icon='lock'
+							iconPosition='left'
+							placeholder='Password'
+							type='password'
+							name='password'
+							value={values.password}
+							onChange={onChangeHandler}
+						/>
+						{errors.password && <Message error content={errors.password} />}
+
+						<Button color='teal' fluid size='large'>
+							Login
+						</Button>
+					</Segment>
+				</Form>
+				
+			</Grid.Column>
+		</Grid>
 	);
 };
 
