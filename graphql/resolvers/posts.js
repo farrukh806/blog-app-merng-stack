@@ -1,7 +1,7 @@
 import User from '../../models/User.js';
 import Post from '../../models/Post.js';
 import checkAuth from '../../utils/auth.js';
-import { AuthenticationError } from 'apollo-server';
+import { AuthenticationError, UserInputError } from 'apollo-server';
 
 const postsResolvers = {
 	Query: {
@@ -29,7 +29,7 @@ const postsResolvers = {
 		createPost: async (_, { body }, context) => {
 			const user = checkAuth(context);
 			if (body.trim() === '') {
-				throw new UserInputError('Post must not be empty');
+				throw new Error('Post must not be empty');
 			}
 			const newPost = new Post({
 				body,
