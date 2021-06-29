@@ -1,11 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import moment from 'moment';
+import { Link } from 'react-router-dom';
 import { Button, Card, Image, Icon, Label } from 'semantic-ui-react';
 
-const PostCard = ({ post: { body, createdAt, username, likes, comments } }) => {
-	const likePostHandler = () => {};
+import DeleteButton from './DeleteButton';
+import LikeButton from './LikeButton';
 
-	const commentPostHandler = () => {};
+const PostCard = ({
+	post: { body, createdAt, username, likes, comments, id },
+}) => {
+	const likePostHandler = (id) => {
+		console.log('Liked ' + id);
+	};
+
+	const deleteHandler = (id) => console.log('Deleted ' + id);
+
 	return (
 		<Card fluid style={{ margin: 3 }}>
 			<Card.Content>
@@ -21,16 +30,8 @@ const PostCard = ({ post: { body, createdAt, username, likes, comments } }) => {
 				<Card.Description>{body}</Card.Description>
 			</Card.Content>
 			<Card.Content>
-				<Button as='div' labelPosition='right' onClick={likePostHandler}>
-					<Button color='red' basic>
-						<Icon name='heart' />
-					</Button>
-					<Label basic color='red' pointing='left'>
-						{likes.length}
-					</Label>
-				</Button>
-
-				<Button as='div' labelPosition='right' onClick={commentPostHandler}>
+				<LikeButton likePostHandler={likePostHandler} likes={likes} id={id} />
+				<Button as={Link} labelPosition='right' to={`/posts/${id}`}>
 					<Button color='teal' basic>
 						<Icon name='comments' />
 					</Button>
@@ -38,6 +39,11 @@ const PostCard = ({ post: { body, createdAt, username, likes, comments } }) => {
 						{comments.length}
 					</Label>
 				</Button>
+				<DeleteButton
+					username={username}
+					deleteHandler={deleteHandler}
+					id={id}
+				/>
 			</Card.Content>
 		</Card>
 	);
