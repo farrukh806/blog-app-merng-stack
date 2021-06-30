@@ -1,28 +1,27 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Message, Confirm } from 'semantic-ui-react';
-import { AuthContext } from '../context/auth';
 import { gql, useMutation } from '@apollo/client';
 import { FETCH_POSTS_QUERY } from '../Pages/Home';
 
-const DeleteButton = ({ username, id, callback }) => {
+const DeleteButton = ({ id, callback, commentId }) => {
 	const [error, setError] = useState(null);
 	const [confirmOpen, setConfirmOpen] = useState(false);
 
-	const context = useContext(AuthContext);
-
-	const [deletePost] = useMutation(DELETE_POST_MUTATION, {
-		variables: { postId: id },
+	const mutation = commentId ? DELETE_COMMENT_MUTATION : DELETE_POST_MUTATION;
+	const [deletePostOrMutation] = useMutation(mutation, {
+		variables: { postId: id, commentId },
 		update(cache, _) {
 			setConfirmOpen(false);
-			const fetchedData = cache.readQuery({ query: FETCH_POSTS_QUERY });
-			const filteredData = fetchedData.getPosts.filter(
-				(post) => post.id !== id
-			);
-			cache.writeQuery({
-				query: FETCH_POSTS_QUERY,
-				data: { getPosts: [...filteredData] },
-			});
-			console.log(cache.data);
+			if (!commentId) {
+				const fetchedData = cache.readQuery({ query: FETCH_POSTS_QUERY });
+				const filteredData = fetchedData.getPosts.filter(
+					(post) => post.id !== id
+				);
+				cache.writeQuery({
+					query: FETCH_POSTS_QUERY,
+					data: { getPosts: [...filteredData] },
+				});
+			}
 
 			if (callback) callback();
 		},
@@ -32,8 +31,9 @@ const DeleteButton = ({ username, id, callback }) => {
 	});
 	return (
 		<>
-			{error && <Message error content={error} />}
-			{context.user && context.user.username === username && (
+			{error ? (
+				<Message error content={error} />
+			) : (
 				<>
 					<Button
 						as='div'
@@ -44,7 +44,7 @@ const DeleteButton = ({ username, id, callback }) => {
 					<Confirm
 						open={confirmOpen}
 						onCancel={() => setConfirmOpen(false)}
-						onConfirm={deletePost}
+						onConfirm={deletePostOrMutation}
 					/>
 				</>
 			)}
@@ -55,6 +55,20 @@ const DeleteButton = ({ username, id, callback }) => {
 const DELETE_POST_MUTATION = gql`
 	mutation deletePost($postId: ID!) {
 		deletePost(postId: $postId)
+	}
+`;
+
+const DELETE_COMMENT_MUTATION = gql`
+	mutation deleteComment($postId: ID!, $commentId: ID!) {
+		deleteComment(postId: $postId, commentId: $commentId) {
+			id
+			comments {
+				id
+				username
+				createdAt
+				body
+			}
+		}
 	}
 `;
 
