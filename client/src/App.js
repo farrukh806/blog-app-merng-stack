@@ -7,16 +7,18 @@ import Header from './components/Header';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
 import Register from './Pages/Register';
+import Post from './Pages/Post';
 
 function App() {
 	return (
 		<AuthProvider>
 			<Router>
-				<Container>
+				<Container style={{ marginTop: '2em' }}>
 					<Header />
 					<Route exact path='/' component={Home} />
 					<Route exact path='/login' component={Login} />
 					<Route exact path='/register' component={Register} />
+					<Route exact path='/posts/:id' component={Post} />
 				</Container>
 			</Router>
 		</AuthProvider>

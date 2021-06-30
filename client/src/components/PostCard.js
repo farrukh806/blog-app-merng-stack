@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import moment from 'moment';
 import { Link } from 'react-router-dom';
 import { Button, Card, Image, Icon, Label } from 'semantic-ui-react';
@@ -9,12 +9,6 @@ import LikeButton from './LikeButton';
 const PostCard = ({
 	post: { body, createdAt, username, likes, comments, id },
 }) => {
-	const likePostHandler = (id) => {
-		console.log('Liked ' + id);
-	};
-
-	const deleteHandler = (id) => console.log('Deleted ' + id);
-
 	return (
 		<Card fluid style={{ margin: 3 }}>
 			<Card.Content>
@@ -25,12 +19,12 @@ const PostCard = ({
 				/>
 				<Card.Header>{username}</Card.Header>
 				<Card.Meta>
-					{moment(new Date(createdAt).toDateString()).fromNow()}
+					{moment(new Date(createdAt).toDateString()).fromNow(Date.now())}
 				</Card.Meta>
 				<Card.Description>{body}</Card.Description>
 			</Card.Content>
 			<Card.Content>
-				<LikeButton likePostHandler={likePostHandler} likes={likes} id={id} />
+				<LikeButton likes={likes} id={id} />
 				<Button as={Link} labelPosition='right' to={`/posts/${id}`}>
 					<Button color='teal' basic>
 						<Icon name='comments' />
@@ -39,11 +33,7 @@ const PostCard = ({
 						{comments.length}
 					</Label>
 				</Button>
-				<DeleteButton
-					username={username}
-					deleteHandler={deleteHandler}
-					id={id}
-				/>
+				<DeleteButton username={username} id={id} />
 			</Card.Content>
 		</Card>
 	);
